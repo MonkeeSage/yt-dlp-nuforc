@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yt-dlp-nuforc"
+version = "2026.11.05"
+description = "yt-dlp extractor plugin for nuforc.org sighting videos (hosted on skiv.com)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "MonkeeSage", email = "monkeesage@gmail.com" }]
+classifiers = [
+    "Environment :: Plugins",
+    "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+Homepage = "https://github.com/MonkeeSage/yt-dlp-nuforc"
+
+[tool.hatch.build.targets.wheel]
+packages = ["yt_dlp_plugins"]
