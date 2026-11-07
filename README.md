@@ -6,6 +6,9 @@ A [yt-dlp](https://github.com/yt-dlp/yt-dlp) extractor plugin for videos attache
 NUFORC videos are hosted on [skiv.com](https://skiv.com), so this plugin also adds an extractor for
 `https://skiv.com/v/<id>` URLs.
 
+This plugin never requests nuforc.org itself (see [How it works](#how-it-works)), so it does not need
+browser cookies, a custom user agent, or the `curl-cffi` impersonation package.
+
 ## Installation
 
 Requires yt-dlp `2023.01.02` or above.
@@ -26,8 +29,24 @@ pipx runpip yt-dlp install --upgrade 'yt-dlp[default]'
 
 Add `--pre` to that command to get yt-dlp's nightly pre-releases instead of the latest stable release.
 
-This plugin never requests nuforc.org itself (see [How it works](#how-it-works)), so it does not need
-browser cookies, a custom user agent, or the `curl-cffi` impersonation extra.
+### Use without installing
+
+From a checkout of this repo, extend `PYTHONPATH` with `$PWD` (yt-dlp scans `PYTHONPATH` for `yt_dlp_plugins` directories):
+
+```
+# one shot
+PYTHONPATH=$PYTHONPATH:$PWD yt-dlp ...
+
+# or to apply to all yt-dlp calls in this shell session
+export PYTHONPATH=$PYTHONPATH:$PWD
+yt-dlp ...
+```
+
+Or add it to your shell config (e.g., ~/.bashrc or ~/.zshrc) so the plugin is always loaded:
+
+```
+export PYTHONPATH=$PYTHONPATH:/path/to/yt-dlp-nuforc
+```
 
 ### Installing the plugin with pipx
 
@@ -43,15 +62,26 @@ or from a local checkout:
 pipx inject yt-dlp /path/to/yt-dlp-nuforc
 ```
 
-### pip
+### Installing the plugin with pip
 
 ```
 python3 -m pip install -U git+https://github.com/MonkeeSage/yt-dlp-nuforc.git
 ```
 
-### Other
+### Other installation methods
 
 See the yt-dlp [plugin installation docs](https://github.com/yt-dlp/yt-dlp#installing-plugins).
+
+### Verify the plugin is detected without sending any requests
+
+To check the plugin has loaded we can use the simulate and verbose flags with a fake url.
+
+If the plugin was loaded our two extractors will be listed.
+
+```
+yt-dlp -v -s "test:" 2>&1 | grep 'Extractor Plugins'
+[debug] Extractor Plugins: NuforcIE, SkivIE
+```
 
 ## Usage
 
